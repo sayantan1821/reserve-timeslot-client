@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckout from "react-stripe-checkout";
 import { Typography, Paper, Box } from "@mui/material";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
 
 const stripePromise = loadStripe("YOUR_STRIPE_PUBLISHABLE_KEY");
 const StripeCheckoutButton = ({ price }) => {
@@ -49,6 +52,9 @@ const StripeCheckoutButton = ({ price }) => {
   );
 };
 const Payment = () => {
+  const { slotId } = useParams();
+  const [slot, setSlot] = useState({})
+  const baseURL = process.env.REACT_APP_API_URL;
   const userDetails = {
     email: "user@example.com",
     name: "John Doe",
@@ -71,6 +77,13 @@ const Payment = () => {
     // Add your logic for payment failure
   };
 
+  useEffect(() => {
+    console.log(slotId)
+    axios.get(`${baseURL}/api/slot/${slotId}`).then((res) => {
+      setSlot(res.data)
+      console.log(res.data)
+    })
+  }, [])
   return (
     <Box sx={{ p: 3 }}>
       <Paper elevation={3} sx={{ p: 3, maxWidth: 400, margin: "auto" }}>
@@ -78,22 +91,22 @@ const Payment = () => {
           Bill Details
         </Typography>
         <Typography variant="body1">
-          <strong>Email:</strong> {userDetails.email}
+          <strong>Email:</strong> {slot.useEmail}
         </Typography>
         <Typography variant="body1">
-          <strong>Name:</strong> {userDetails.name}
+          <strong>Name:</strong> {slot.userName}
         </Typography>
         <Typography variant="body1">
-          <strong>Date:</strong> {timeSlotDetails.date}
+          <strong>Date:</strong> {slot.date}
         </Typography>
         <Typography variant="body1">
-          <strong>Time Slot:</strong> {timeSlotDetails.timeSlot}
+          <strong>Time Slot:</strong> 
         </Typography>
         <Typography variant="body1">
-          <strong>Phone Number:</strong> {userDetails.phoneNumber}
+          <strong>Phone Number:</strong> {slot.userPhoneNo}
         </Typography>
         <Typography variant="body1">
-          <strong>Price:</strong> ${timeSlotDetails.price.toFixed(2)}
+          <strong>Price:</strong> ${100}
         </Typography>
         <div className="stripe-button-center">
           <StripeCheckoutButton price={100} />

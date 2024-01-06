@@ -48,7 +48,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="bookslot/:slot" exact element={<SlotBook />} />
-        <Route path="payment/:paymentId" exact element={<Payment />} />
+        <Route path="payment/:slotId" exact element={<Payment />} />
         <Route path="allbookings" exact element={<AllBookings />} />
       </Routes>
     </BrowserRouter>

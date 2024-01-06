@@ -2,26 +2,39 @@ import React, { useState } from "react";
 import { TextField, Button, Paper, Container, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import axios from "axios";
 
 const SlotBook = () => {
   const { slot } = useParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
   const [description, setDescription] = useState("");
-    const selectedDate = dayjs(slot)
+
+  const baseURL = process.env.REACT_APP_API_URL;
+  const selectedDate = dayjs(slot);
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const body = {
+      userName: name,
+      useEmail: email,
+      userPhoneNo: phoneNo,
+      date: selectedDate.toString(),
+      timeSlot: `${selectedDate.format("h:mm a")} - ${selectedDate
+        .add("1", "hour")
+        .format("h:mm a")}`,
+      desc: description,
+    };
     // Handle form submission logic here
-
-    // For demonstration purposes, log the form data
-    console.log({ name, email, description, selectedDate: selectedDate.toString() });
+    axios.post(`${baseURL}/api/slot/book`, body).then((response) => {
+      console.log(response.data);
+      setName("");
+      setEmail("");
+      setDescription("");
+      window.location.pathname = "/payment/" + response.data._id;
+    });
 
     // Clear form fields after submission
-    setName("");
-    setEmail("");
-    setDescription("");
-    window.location.pathname = "/payment/" + "0001"
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -58,7 +71,17 @@ const SlotBook = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-           <TextField
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Phone number"
+            variant="outlined"
+            type="text"
+            value={phoneNo}
+            onChange={(e) => setPhoneNo(e.target.value)}
+          />
+          <TextField
             margin="normal"
             required
             fullWidth
@@ -76,7 +99,11 @@ const SlotBook = () => {
             label="Time Slot"
             variant="outlined"
             type="text"
-            value={selectedDate.format("h:mm a") + " - " + selectedDate.add("1", "hour").format("h:mm a")}
+            value={
+              selectedDate.format("h:mm a") +
+              " - " +
+              selectedDate.add("1", "hour").format("h:mm a")
+            }
             // onChange={(e) => setSelectedTimeSlot(e.target.value)}
             disabled
           />

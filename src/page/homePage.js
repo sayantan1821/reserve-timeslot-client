@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import dayjs from "dayjs";
+import dayjs from "dayjs";      
 
 const style = {
   position: "absolute",
@@ -51,6 +51,14 @@ function HomePage() {
           />
         </LocalizationProvider>
       </div>
+      <Button
+            fullWidth
+            variant="outlined"
+            sx={{ width: "auto",marginTop: 2, mb: 2 }}
+            onClick={() => window.location.pathname = "/allbookings"}
+          >
+            Checkout all Successfull bookings
+          </Button>
       <Modal
         open={open}
         onClose={handleClose}
