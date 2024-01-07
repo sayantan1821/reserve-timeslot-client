@@ -8,23 +8,24 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 
-const stripePromise = loadStripe("YOUR_STRIPE_PUBLISHABLE_KEY");
+// const stripePromise = loadStripe("YOUR_STRIPE_SECRET_KEY");
 const StripeCheckoutButton = ({ price }) => {
   const priceForStripe = price * 100;
   const publishableKey =
     "pk_test_b7a3hFL5nC3qlBCZ6bQACpez00gyMMP52H";
-
+    const baseURL = process.env.REACT_APP_API_URL;
   const onToken = (token) => {
     // axios({
-    //   url: "payment",
+    //   url: `${baseURL}/api/payment`,
     //   method: "post",
     //   data: {
     //     amount: priceForStripe,
-    //     token: token,
+    //     token: token.id,
     //   },
     // })
     //   .then((response) => {
     //     alert("succesful payment");
+        
     //   })
     //   .catch((error) => {
     //     console.log("Payment Error: ", error);
@@ -32,7 +33,7 @@ const StripeCheckoutButton = ({ price }) => {
     //       "There was an issue with your payment! Please make sure you use the provided credit card."
     //     );
     //   });
-    console.log("payment in in process");
+    // console.log("payment in in process");
     window.location.pathname = "/allbookings"
   };
 
@@ -55,17 +56,6 @@ const Payment = () => {
   const { slotId } = useParams();
   const [slot, setSlot] = useState({})
   const baseURL = process.env.REACT_APP_API_URL;
-  const userDetails = {
-    email: "user@example.com",
-    name: "John Doe",
-    phoneNumber: "123-456-7890",
-  };
-
-  const timeSlotDetails = {
-    date: "2024-01-06", // Replace with your actual date format
-    timeSlot: "10:00 AM", // Replace with your actual time slot format
-    price: 1000, // Replace with your actual slot price
-  };
 
   const handlePaymentSuccess = () => {
     console.log("Payment successful!");
@@ -81,7 +71,7 @@ const Payment = () => {
     console.log(slotId)
     axios.get(`${baseURL}/api/slot/${slotId}`).then((res) => {
       setSlot(res.data)
-      console.log(res.data)
+      // console.log(dayjs(res.data.date).format('h:mm A'))
     })
   }, [])
   return (
@@ -97,10 +87,14 @@ const Payment = () => {
           <strong>Name:</strong> {slot.userName}
         </Typography>
         <Typography variant="body1">
-          <strong>Date:</strong> {slot.date}
+          <strong>Date:</strong> {dayjs(slot.date).format("dddd, MMMM D YYYY")}
         </Typography>
         <Typography variant="body1">
-          <strong>Time Slot:</strong> 
+          <strong>Time Slot:</strong> {
+              dayjs(slot.date).format("h:mm a") +
+              " - " +
+              dayjs(slot.date).add("1", "hour").format("h:mm a")
+            }
         </Typography>
         <Typography variant="body1">
           <strong>Phone Number:</strong> {slot.userPhoneNo}

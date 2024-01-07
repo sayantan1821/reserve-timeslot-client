@@ -48,7 +48,7 @@ const SlotBook = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Book your slot.
+          Please enter the below details.
         </Typography>
         <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 2 }}>
           <TextField

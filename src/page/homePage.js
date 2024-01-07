@@ -35,6 +35,10 @@ function HomePage() {
     setSelectedDate(newDate);
   };
 
+  const resetCalender = () => {
+    setSelectedDate(dayjs)
+  }
+
   const handleSlotConfirm = () => {
     window.location.pathname = "/bookslot/" + selectedDate.$d;
   }
@@ -47,7 +51,9 @@ function HomePage() {
             orientation="landscape"
             value={selectedDate}
             disablePast={true}
+            minutesStep={30}
             onAccept={handleDateChange}
+            onClose={resetCalender}
           />
         </LocalizationProvider>
       </div>
